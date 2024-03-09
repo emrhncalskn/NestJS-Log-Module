@@ -3,7 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
 import { LogModule } from './log/log.module';
 
 @Module({
@@ -24,8 +23,7 @@ import { LogModule } from './log/log.module';
       }),
       inject: [ConfigService],
 
-    }),
-    UserModule, LogModule],
+    }), LogModule],
   controllers: [AppController],
   providers: [AppService, ConfigService],
 })
