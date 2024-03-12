@@ -137,7 +137,7 @@ export class LogService {
 
             // Determine statusCode and routePath based on error status
             let statusCode, routePath;
-            !isError ? (routePath = res.req.route.path, statusCode = res.statusCode, response_body = JSON.stringify(response_body))
+            !isError ? (routePath = res.req.route.path, statusCode = res.statusCode)
                 : (routePath = res.req.originalUrl, statusCode = 500)
 
             // Construct log data

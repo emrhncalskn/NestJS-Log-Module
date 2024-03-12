@@ -15,13 +15,13 @@ export class ExceptionHandler implements ExceptionFilter {
     ) { }
 
     // Method to catch and handle exceptions
-    catch(exception: unknown, host: ArgumentsHost) {
+    async catch(exception: unknown, host: ArgumentsHost) {
 
         const { httpAdapter } = this.httpAdapterHost; // Get the HTTP adapter
         const ctx = host.switchToHttp(); // Switch context and get the HTTP response
         const res = ctx.getResponse<Response>();
         res.setHeader('origin', 'exception-handler'); // Add a custom origin to the response header
-        this.logService.createLog(res, { msg: LogConstant.ERROR_IN_HANDLER, exception }, true); // Log the exception message
-        httpAdapter.reply(ctx.getResponse(), { msg: LogConstant.SOMETHING_WENT_WRONG }, 500); // Create an HTTP response and send the error message
+        const log = await this.logService.createLog(res, { msg: LogConstant.ERROR_IN_HANDLER, exception }, true); // Log the exception message
+        httpAdapter.reply(ctx.getResponse(), { msg: LogConstant.SOMETHING_WENT_WRONG, error_code: log.unique_code }, 500); // Create an HTTP response and send the error message
     }
 }
