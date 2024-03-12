@@ -20,6 +20,8 @@ export class Log {
     response_body: string;
     @Column()
     status_code: number;
+    @Column()
+    unique_code: string;
     @CreateDateColumn()
     created_at: Date;
 }

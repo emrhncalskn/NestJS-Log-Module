@@ -5,6 +5,9 @@ import { CreateLogDto } from "./dto/log.dto";
 import { Log } from "./entities/log.entity";
 import { Response } from 'express';
 import { LogConstant } from "./log.constant";
+import { v4 as uuidv4 } from 'uuid';
+
+let unique_code = uuidv4();
 
 @Injectable()
 export class LogService {
@@ -128,6 +131,10 @@ export class LogService {
     // Method to create log
     async createLog(res: Response, response_body: any, isError?: boolean) {
         try {
+
+            // Generate a unique code for the log and group them
+            res.on('close', () => { unique_code = uuidv4() })
+
             // Determine statusCode and routePath based on error status
             let statusCode, routePath;
             !isError ? (routePath = res.req.route.path, statusCode = res.statusCode, response_body = JSON.stringify(response_body))
@@ -143,6 +150,7 @@ export class LogService {
                 headers: JSON.stringify(res.getHeaders()),
                 response_body: JSON.stringify(response_body),
                 status_code: statusCode,
+                unique_code: unique_code
             };
 
             // Create and save log entity

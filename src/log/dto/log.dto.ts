@@ -7,4 +7,5 @@ export class CreateLogDto {
     query?: string;
     headers?: string;
     status_code: number;
+    unique_code: string;
 }
