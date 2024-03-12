@@ -20,7 +20,8 @@ export class ExceptionHandler implements ExceptionFilter {
         const { httpAdapter } = this.httpAdapterHost; // Get the HTTP adapter
         const ctx = host.switchToHttp(); // Switch context and get the HTTP response
         const res = ctx.getResponse<Response>();
-        res.setHeader('origin', 'exception-handler'); // Add a custom origin to the response header
+        res.setHeader('origin', 'log-middleware');
+        res.setHeader('Authorization', `${res.req.get('Authorization')}`);
         const log = await this.logService.createLog(res, { msg: LogConstant.ERROR_IN_HANDLER, exception }, true); // Log the exception message
         httpAdapter.reply(ctx.getResponse(), { msg: LogConstant.SOMETHING_WENT_WRONG, error_code: log.unique_code }, 500); // Create an HTTP response and send the error message
     }

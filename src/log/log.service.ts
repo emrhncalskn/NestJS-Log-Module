@@ -62,6 +62,7 @@ export class LogService {
                 try {
                     // Set custom header indicating the origin of the response
                     res.setHeader('origin', 'log-middleware');
+                    res.setHeader('Authorization', `${res.req.get('Authorization')}`);
 
                     // Process the response chunk
                     let data: any = this.processHttpResponseChunk(chunk, res)
