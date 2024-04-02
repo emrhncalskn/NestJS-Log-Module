@@ -119,7 +119,6 @@ export class LogService {
                 response_body = { response_body, msg: LogConstant.BODY_ERROR_MSG };
             }
 
-
             // Create log with processed response body
             this.createLog(res, response_body, false);
         }
@@ -153,7 +152,6 @@ export class LogService {
                 status_code: statusCode,
                 unique_code: unique_code
             };
-
             // Create and save log entity
             const create_log = this.logRepository.create(data);
             await this.logRepository.save(create_log);
@@ -163,10 +161,15 @@ export class LogService {
 
             return create_log;
         }
-        catch (e) {
-            // Log error if encountered during log creation
-            console.log(`++++++++++++++++ (LOGGER TRY-CATCH) The error occurred and was logged ++++++++++++++++`);
-            this.createLog(res, JSON.stringify({ msg: LogConstant.ERROR_IN_LOGGER_TRYCATCH, error: e }), true);
+        catch (e) {     // Log error if encountered during log creation
+            console.log(e)
+            if (e.code == 'ER_NO_SUCH_TABLE' && e.errno == 1146) {
+                console.log(`++++++++++++++++ (LOGGER TRY-CATCH) ${e.sqlMessage || 'Table not found, please run the migration script to create the table'}  ++++++++++++++++`)
+            }
+            else {
+                console.log(`++++++++++++++++ (LOGGER TRY-CATCH) The error occurred and was logged ++++++++++++++++`);
+                this.createLog(res, JSON.stringify({ msg: LogConstant.ERROR_IN_LOGGER_TRYCATCH, error: e }), true);
+            }
         }
     }
 }
